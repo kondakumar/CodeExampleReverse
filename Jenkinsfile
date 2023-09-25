@@ -1,7 +1,7 @@
 pipeline {
 
     environment {
-    imagerepo = '/kumarmanvit/codeexample'
+    imagerepo = '/kumarmanvit/CodeExampleReverse'
     imagename = 'codetest'
 	UNIQUE_ID = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
 	RELEASE_VERSION = getReleaseVersion()
