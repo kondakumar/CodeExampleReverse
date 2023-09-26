@@ -58,8 +58,8 @@ pipeline {
             steps {
                withCredentials([usernamePassword(credentialsId: 'github-cicd-user', variable: 'USERPASS')]) {
                     sh "git clone https://github.com/kondakumar/CodeExampleReverse-ops.git"
-                    sh "cd CodeExample-ops"
-                    dir('CodeExample-ops') {
+                    sh "cd CodeExampleReverse-ops"
+                    dir('CodeExampleReverse-ops') {
                        sh "sed -i 's/newTag.*/newTag: v${BUILD_NUMBER}/g' overlays/*/*kustomization.yaml"
                        sh "git config user.email kumar9.konda@gmail.com"
                        sh "git config user.name kondakumar"

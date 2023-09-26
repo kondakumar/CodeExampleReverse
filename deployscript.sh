@@ -1,10 +1,10 @@
 #!/bin/bash
-
+### Jenkins  pipeline need to run before execute this file
 NAMESPACE='codetest'
 mkdir /home/local
 cd /home/local
-git clone https://github.com/kondakumar/CodeExample-ops.git
-cd /home/local/CodeExample-ops/overlays
+git clone https://github.com/kondakumar/CodeExampleReverse-ops.git
+cd /home/local/CodeExampleReverse-ops/overlays
 
 kubectl create namespace $NAMESPACE
 kubectl apply -k  ./ -n $NAMESPACE
