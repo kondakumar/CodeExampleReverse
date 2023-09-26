@@ -9,5 +9,5 @@ cd /home/local/CodeExampleReverse-ops/overlays
 kubectl create namespace $NAMESPACE
 kubectl apply -k  ./ -n $NAMESPACE
 kubectl get all -n $NAMESPACE
-curl http://localhost:8080/codetest
+curl http://localhost:8080/rev/codetest
 
