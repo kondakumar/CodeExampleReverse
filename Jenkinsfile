@@ -11,9 +11,7 @@ pipeline {
 	ImageNameTag  =  "${imagerepo}/${imagename}:${RELEASE_VERSION}"
 	pullCredential = 'regcred'
     pushCredential = 'regcred'
-
-
-    }
+     }
 
     agent any
 
@@ -28,7 +26,7 @@ pipeline {
 
                             serviceImage = docker.build("${imagename}","--no-cache  -f ./${SERVICE_APP_NAME}/docker/Dockerfile .")
                         }
-                        currentBuild.description = 'DockerDocker image successfully built.'
+                        currentBuild.description = 'Docker image successfully built.'
 
                     }
 
@@ -36,7 +34,7 @@ pipeline {
             }
         }
 
-       stage('Publish Service Image') {
+        stage('Publish Service Image') {
             when {
                 allOf {
                     branch pattern: RELEASE_BRANCH_PATTERN, comparator: "REGEXP"
@@ -55,9 +53,26 @@ pipeline {
                 echo "Successfully uploaded service image to staging repository with tags ${ImageNameTag}"
             }
         }
-
-	}
+        stage('Update Manifest') {
+                            echo 'Updating deployment scripts'
+            steps {
+               withCredentials([usernamePassword(credentialsId: 'github-cicd-user', variable: 'USERPASS')]) {
+                    sh "git clone https://github.com/kondakumar/CodeExampleReverse-ops.git"
+                    sh "cd CodeExample-ops"
+                    dir('CodeExample-ops') {
+                       sh "sed -i 's/newTag.*/newTag: v${BUILD_NUMBER}/g' overlays/*/*kustomization.yaml"
+                       sh "git config user.email kumar9.konda@gmail.com"
+                       sh "git config user.name kondakumar"
+                       sh "git add https://github.com/kondakumar/CodeExampleReverse-ops/overlays/*/*kustomization.yaml"
+                       sh "git commit -m 'Update image version to: ${BUILD_NUMBER}'"
+                       sh"git push https://$USERPASS@github.com/kondakumar/CodeExampleReverse-ops.git HEAD:main -f"
+                    }
+               }
+            }
+        }
+     }
 }
+
 
   post {
     always {
